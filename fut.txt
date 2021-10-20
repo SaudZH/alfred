@@ -1,0 +1,3 @@
+check if dir exists 
+check for tools 
+hide output from onforall and change it to %
