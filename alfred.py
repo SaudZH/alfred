@@ -16,6 +16,8 @@ import os.path
 from os import path
 import os,sys
 import shutil
+import progressbar
+from time import sleep
 
 
 def logo():
@@ -25,20 +27,59 @@ def logo():
 
                 ▄▀█ █░░ █▀▀ █▀█ █▀▀ █▀▄
                 █▀█ █▄▄ █▀░ █▀▄ ██▄ █▄▀
-                    @SaudTz &  @ip274   
+                   Telegram @SaudTz &  @ip274   
 
 
-    '''+RED)
+    ''')
 
 
 logo()
 
-if os.getuid() != 0:
+if os.getuid() != 0: # Force to run as sudo
     print("           Please Run As Sudo")
     sys.exit(0)
 
+def tool():
+  try:
+      # pipe output to /dev/null for silence
+      null = open("/dev/null", "w")
+      subprocess.Popen("assetfinder", stdout=null, stderr=null)
+      null.close()
 
-def check(domain):
+  except OSError:
+      print(YELLOW+"assetfinder not installed please install it first in /usr/bin")
+      exit()
+  try:
+      # pipe output to /dev/null for silence
+      null = open("/dev/null", "w")
+      subprocess.Popen("subfinder", stdout=null, stderr=null)
+      null.close()
+
+  except OSError:
+      print(YELLOW+"subfinder not installed please install it first in /usr/bin")
+      exit()
+
+  try:
+      # pipe output to /dev/null for silence
+      null = open("/dev/null", "w")
+      subprocess.Popen("httpx", stdout=null, stderr=null)
+      null.close()
+
+  except OSError:
+      print(YELLOW+"httpx not installed please install it first in /usr/bin")
+      exit()
+  try:
+      # pipe output to /dev/null for silence
+      null = open("/dev/null", "w")
+      subprocess.Popen("amass", stdout=null, stderr=null)
+      null.close()
+
+  except OSError:
+      print(YELLOW+"amass not installed please install it first in /usr/bin")
+      exit()
+
+
+def check(domain): # check if target dirctory already exists
     path = domain
 
     isExist = os.path.exists(path)
@@ -49,7 +90,7 @@ def check(domain):
     elif isExist == True:
         try:
 
-            fo = input("Folder already exists do you wanna delete it?[y,n]  ")
+            fo = input(RED+"Folder already exists do you wanna delete it?[y,n] "+WHITE)
             if fo == "y" or fo == "Y":
                 shutil.rmtree(f"{Domain}")
             elif fo == "n" or fo == "N":
@@ -67,10 +108,73 @@ def check(domain):
         print("something went wrong !")
         exit()
 
+def OneForAll(): # check if OneForAll dirctory exists
+    path = "OneForAll"
+
+    isExist = os.path.exists(path)
+
+    if isExist == True:
+        pass
+
+    elif isExist == False:
+        try:
+
+            fo = input(YELLOW+"OneForAll dirctory not exists do you wanna clone it?[Y,n] "+WHITE)
+            if fo == "y" or fo == "Y":
+                system(f'git clone https://github.com/shmilylty/OneForAll.git')
+                print(YELLOW+"OneForAll has been installed (:"+WHITE)
+            elif fo == "n" or fo == "N":
+                print(Cyan+"you need to clone 'OneForAll' in the same alfred File"+RED+"  !same letter case!"+WHITE)
+                exit()
+                           
+            else:
+                print("please choose correct option")
+                exit()
+
+        except:
+            exit()
+    else:
+        print("something went wrong !")
+        exit()
+
+
+def Sublist3r(): # check if tool Sublist3r exists
+    path = "Sublist3r"
+
+    isExist = os.path.exists(path)
+
+    if isExist == True:
+        pass
+
+    elif isExist == False:
+        try:
+
+            fo = input(RED+"Sublist3r dirctory not exists do you wanna clone it?[Y,n] "+WHITE)
+            if fo == "y" or fo == "Y":
+                system(f'git clone https://github.com/aboul3la/Sublist3r.git')
+                print(YELLOW+"Sublist3r has been installed (:"+WHITE)
+            elif fo == "n" or fo == "N":
+                print(Cyan+"you need to clone 'Sublist3r' in the same alfred File !same letter case!")
+                exit()
+                           
+            else:
+                print("please choose correct option")
+                exit()
+
+        except:
+            exit()
+    else:
+        print("something went wrong !")
+        exit()
+Sublist3r()
+OneForAll()
+
 def sub(Domain):
     IP_addres = socket.gethostbyname(Domain) # For Get Ip Of Domain
     check(Domain)
+    tool()
     mkdir(f"{Domain}")
+    
 
 
 
@@ -88,7 +192,7 @@ def sub(Domain):
 
     #Install requirements
     print(GREEN+"[!]Install Requirements For Tools       "+WHITE)
-    system(f'pip3 install -r Tools/Sublist3r/requirements.txt {Hide_output} && pip3 install -r Tools/OneForAll/requirements.txt {Hide_output}')
+    system(f'pip3 install -r Sublist3r/requirements.txt {Hide_output} && pip3 install -r OneForAll/requirements.txt {Hide_output}')
     print(YELLOW+"[+]Requirements Installed. "+WHITE)
     #Install requirements
 
@@ -108,18 +212,24 @@ def sub(Domain):
 
     #Get Subdomains From sublist3r
     print(GREEN+"[!]Start Get Subdomains From [sublist3r]       "+WHITE)
-    subprocess.check_output(f'python3 Tools/Sublist3r/sublist3r.py -d {Domain} -o {Domain}/sublist3r.txt', shell=True)
+    subprocess.check_output(f'python3 Sublist3r/sublist3r.py -d {Domain} -o {Domain}/sublist3r.txt', shell=True)
     print(YELLOW+"[+]SubDomains Have Saved On sublist3r.txt! "+WHITE)
     #Get Subdomains From sublist3r
 
+    #Get Subdomains From Findomain
+    print(GREEN+"[!]Start Get Subdomains From [Findomain]       "+WHITE)
+    subprocess.check_output(f'findomain -t {Domain} -o {Domain}/', shell=True)
+    print(YELLOW+"[+]SubDomains Have Saved On Findomain.txt! "+WHITE)
+    #Get Subdomains From Findomain
+
     #Get Subdomains From OneForAll
     print(GREEN+"[!]Start Get Subdomains From [OneForAll]       "+WHITE)
-    subprocess.check_output(f'python3 Tools/OneForAll/oneforall.py --target {Domain} --brute --alive True run --path {Hide_output}', shell=True)
+    subprocess.check_output(f'python3 OneForAll/oneforall.py --target {Domain} --brute --alive True run --path {Hide_output}', shell=True)
     print(YELLOW+"[+]SubDomains Have Saved On OneForAll File! "+WHITE)
     #Get Subdomains From OneForAll
     
     #Get results From OneForAll
-    subprocess.check_output(f'mv Tools/OneForAll/results {Domain}/More_results', shell=True)
+    subprocess.check_output(f'mv OneForAll/results {Domain}/More_results', shell=True)
     #Get results From OneForAll
 
     #move txt file
@@ -153,9 +263,9 @@ def sub(Domain):
     #Get Forbidden Subdomains From httpx
 
 
-    #Keep 200 & 403 Subdomains Text Files
-    subprocess.check_output(f'sudo mkdir {Domain}/Subdomains && sudo mv {Domain}/*Sub-Domains*.txt {Domain}/Subdomains && sudo rm {Domain}/*.txt',shell=True)
-    #Keep 200 & 403 Subdomains Text Files
+    #Filter results
+    subprocess.check_output(f'sudo mkdir {Domain}/Tools_results && sudo mkdir {Domain}/Final_results && sudo mv {Domain}/Sub-Domains*.txt {Domain}/Final_results && sudo mv {Domain}/*.txt {Domain}/Tools_results',shell=True)
+    #Filter results
 
     #give access for user
     subprocess.check_output(f'sudo chmod -R ugo+rwx {Domain}',shell=True)
@@ -168,107 +278,33 @@ def sub(Domain):
 
 
 
-def scan(Domain):
-    IP_addres = socket.gethostbyname(Domain) # For Get Ip Of Domain
-
-    print(Cyan+"        ------------------------------  "+WHITE)
-    print(Cyan+"        |          Scan Nmap         |  "+WHITE)
-    print(Cyan+"        ------------------------------  "+WHITE)
-    print(Cyan+"        Domain:   {}                    ".format(Domain)+WHITE)
-    print(Cyan+"        Ip:       {}                    ".format(IP_addres)+WHITE)
-    print("\n")
-
-
-    #nmap Scan
-    print(GREEN+"[!]Start nmap Scan"+WHITE)
-    print("\n")
-    system('sudo nmap -sV -Pn {}'.format(Domain))
-    #nmap Scan
-
-    print("\n")
-
-    print(Cyan+"        ------------------------------  "+WHITE)
-    print(Cyan+"        |          Scan Nikto        |  "+WHITE)
-    print(Cyan+"        ------------------------------  "+WHITE)
-    print(Cyan+"        Domain:   {}                    ".format(Domain)+WHITE)
-    print(Cyan+"        Ip:       {}                    ".format(IP_addres)+WHITE)
-    print("\n")
-
-    #Nikto Scan
-    print(GREEN+"[!]Start Nikto Scan"+WHITE)
-    print("\n")
-    system('nikto -h {}'.format(Domain))
-    #Nikto Scan
-
-
-    print("\n")
-
-
-
-
-#-----------------From Here I Get User Input-----------------#
-argument = argparse.ArgumentParser(add_help=False)           #
-                                                             #
-argument.add_argument("-h","--help","-help",action='store_true')     #
-                                                             #
-argument.add_argument("-sub","--sub")                        #
-argument.add_argument("-scan","--scan")                      #
-                                                             #  
-option = argument.parse_args()                               #
-#-----------------From Here I Get User Input-----------------#
-
-
-#-----------------If User Ask For Help!-----------------#
-if option.help:                                         #
-    print(f'''{Cyan}    
-Usage: python alfred.py [option]                          
-Options:
-   -sub , --sub       To get SubDomains That The Domain provide.
-   -scan, --scan      To Get information on the services and operating systems they are running By This Domain''')
-    print(GREEN,'''
-    Example:
-    python3 alfred.py -sub google.com
-    python3 alfred.py -scan google.com
-''')
-    exit()                                              #
-#-----------------If User Ask For Help!-----------------#
-
-if option.sub:
-    Domain = option.sub
-    try:
-       sub(Domain)
-    except Exception as ERROR:
-        print(RED+"[!]ERROR: {}.".format(ERROR)+WHITE)
-        #print(RED+"Error Code: 147"+WHITE)
-
-        exit()
-
-    exit()
-
-if option.scan:
-    Domain = option.scan
-    try:
-        scan(Domain)
-    except Exception as ERROR:
-        print(RED+"[!]ERROR: {}.".format(ERROR)+WHITE)
-        #print(RED+"Error Code: 159"+WHITE)
-
-        exit()  
-
-    exit()
-
-
+##########################################
+def command():                           #
+    try:                                 #                          
+        Domain = sys.argv[1]             #  
+        return Domain                    #
+    except:                              #
+        return False                     #
+########################################################     
+User_Command = command()                               #
+                                                       # 
+if User_Command == False:                              #
+    pass                                               #
+else:                                                  #
+    Domain = User_Command                              #
+    try:                                               #
+       sub(Domain)                                     #
+    except Exception as ERROR:                         #
+        print(RED+"[!]ERROR: {}.".format(ERROR)+WHITE) #
+        exit()                                         #
+                                                       # 
+    exit()                                             #
+########################################################
 
 #------- For Nothing -------#
-print(Cyan,'''    
-Usage: python alfred.py [option]                          
-Options:
-   -sub , --sub       To get SubDomains That The Domain provide.
-   -scan, --scan      To Get information on the services & ports and operating systems they are running By This Domain ''')
+print(Cyan,"Usage: python alfred.py [Domain]")
 print(GREEN,'''
     Example:
-    python3 alfred.py -sub google.com
-    python3 alfred.py -scan google.com
+    python3 alfred.py google.com
 ''')
-
 exit()
