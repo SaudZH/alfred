@@ -216,11 +216,6 @@ def sub(Domain):
     print(YELLOW+"[+]SubDomains Have Saved On sublist3r.txt! "+WHITE)
     #Get Subdomains From sublist3r
 
-    #Get Subdomains From Findomain
-    print(GREEN+"[!]Start Get Subdomains From [Findomain]       "+WHITE)
-    subprocess.check_output(f'findomain -t {Domain} -o {Domain}/', shell=True)
-    print(YELLOW+"[+]SubDomains Have Saved On Findomain.txt! "+WHITE)
-    #Get Subdomains From Findomain
 
     #Get Subdomains From OneForAll
     print(GREEN+"[!]Start Get Subdomains From [OneForAll]       "+WHITE)
