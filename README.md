@@ -1,11 +1,7 @@
 # alfred
-test-1
+BETA
 
-For The Tools
 
- create new folder called (Tools) beside alfred.py
- 
- download form this repos and add them to Tools path
  
  https://github.com/shmilylty/OneForAll
  
